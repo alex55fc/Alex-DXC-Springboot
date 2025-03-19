@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ProductsService
+    name: AccountService
   profiles.active: dev
 
 server:
@@ -18,7 +18,7 @@ spring:
   config.activate.on-profile: dev
   devtools.restart.enabled: true
   datasource:
-    url: "jdbc:h2:mem:productsdb"
+    url: "jdbc:h2:mem:accounts_db"
     driverClassName: org.h2.Driver
     username: sa
     password: password
@@ -26,7 +26,7 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       generate-ddl: true
     defer-datasource-initialization: true
   h2:
@@ -38,10 +38,10 @@ server:
 
 #debug: true
 logging:
-  path: /var/tmp/
-  file: /var/tmp/mylog.log
+  path: /var/logs/
+  file: /var/logs/accounts.log
   level:
-    root: INFO
+    root: DEBUG
 
 
 ---
@@ -51,3 +51,7 @@ spring:
 server:
   servlet.contextPath: /api/v1
   port: 9943
+
+logging:
+  level:
+    root: ERROR
