@@ -30,8 +30,8 @@ public class Account {
 
     private Long ownerId;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     Customer owner;
-
 
 }
