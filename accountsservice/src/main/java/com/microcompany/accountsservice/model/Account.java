@@ -1,13 +1,14 @@
 package com.microcompany.accountsservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -28,6 +29,7 @@ public class Account {
 
     private int balance;
 
+    @Column(name = "owner_id_value")
     private Long ownerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
