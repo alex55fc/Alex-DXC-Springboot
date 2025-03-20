@@ -33,8 +33,7 @@ public class Account {
     private Long ownerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id",
-            insertable = false, updatable = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     Customer owner;
 
 }
