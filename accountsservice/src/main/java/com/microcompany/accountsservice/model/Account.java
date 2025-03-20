@@ -29,8 +29,8 @@ public class Account {
 
     private int balance;
 
-    @Column(name = "owner_id_value")
-    private Long ownerId;
+    //@Column(name = "owner_id_value")
+    //private Long ownerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
