@@ -26,8 +26,8 @@ public interface IAccountController {
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity createAccount(@Valid @RequestBody Account account);
 
-    @PutMapping(value = "/account/{id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity updateAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account);
+    @PutMapping(value = "/account/{id}/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity updateAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account, @Min(1) @PathVariable("owner_id") Long ownerId);
 
     @DeleteMapping(value = "/account/{id}/owner/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccount(@Min(1) @PathVariable("id") Long id,  @Min(1) @PathVariable("owner_id") Long cid);

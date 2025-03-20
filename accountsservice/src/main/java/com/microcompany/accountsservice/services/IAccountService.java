@@ -7,19 +7,19 @@ import java.util.List;
 public interface IAccountService {
     Account create(Account account);
 
-    List<Account> getAccounts();
+    Account getAccount(Long id, Long ownerId);
 
-    Account getAccount(Long id);
+    List<Account> getAccounts(Long id);
 
     List<Account> getAccountByOwnerId(Long ownerId);
 
-    Account updateAccount(Long id, Account account);
+    Account updateAccount(Long id, Account account, Long ownerId);
 
     Account addBalance(Long id, int amount, Long ownerId);
 
     Account withdrawBalance(Long id, int amount, Long ownerId);
 
-    void delete(Long id);
+    void delete(Long id, Long ownerId);
 
     void deleteAccountsUsingOwnerId(Long ownerId);
 

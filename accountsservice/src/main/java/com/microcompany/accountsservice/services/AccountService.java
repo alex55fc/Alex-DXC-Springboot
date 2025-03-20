@@ -1,6 +1,7 @@
 package com.microcompany.accountsservice.services;
 
 import com.microcompany.accountsservice.exception.AccountNotfoundException;
+import com.microcompany.accountsservice.exception.GlobalException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
@@ -20,6 +21,26 @@ public class AccountService implements IAccountService {
     private AccountRepository accountRepository;
 
     @Override
+    public Account getAccount(Long id, Long ownerId) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        if(account.getOwner().getId() != ownerId) new GlobalException();
+        return account;
+    }
+    @Override
+    public List<Account> getAccounts(Long id) {
+        List<Account> listaUsuario = accountRepository.findByOwnerId(id);
+        if(listaUsuario.isEmpty()) new GlobalException();
+        return listaUsuario;
+    }
+    @Override
+    public Account updateAccount(Long id, Account account, Long ownerId) {
+        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        if(ownerId  != newAccount.getOwner().getId()) new GlobalException();
+        newAccount.setType(account.getType());
+        return accountRepository.save(newAccount);
+    }
+
+    @Override
     public Account create(Account account) {
         Date current_Date = new Date();
         account.setOpeningDate(current_Date);
@@ -27,29 +48,22 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public List<Account> getAccounts() {
-        return accountRepository.findAll();
+    public void delete(Long id, Long ownerId) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        if(ownerId != account.getOwner().getId()) new GlobalException();
+        this.accountRepository.delete(account);
     }
 
-    @Override
-    public Account getAccount(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        Customer owner = null; // Will be gotten from user service
-        account.setOwner(owner);
-        return account;
-    }
+
+
+
 
     @Override
     public List<Account> getAccountByOwnerId(Long ownerId) {
         return accountRepository.findByOwnerId(ownerId);
     }
 
-    @Override
-    public Account updateAccount(Long id, Account account) {
-        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        newAccount.setType(account.getType());
-        return accountRepository.save(newAccount);
-    }
+
 
     @Override
     public Account addBalance(Long id, int amount, Long ownerId) {
@@ -69,11 +83,7 @@ public class AccountService implements IAccountService {
         return accountRepository.save(newAccount);
     }
 
-    @Override
-    public void delete(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        this.accountRepository.delete(account);
-    }
+
 
     @Override
     public void deleteAccountsUsingOwnerId(Long ownerId) {
