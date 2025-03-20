@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/accounts")
 public class AccountController {
 
-    private IAccountService as;
+    private final IAccountService as;
 
     public AccountController(IAccountService as) {
         this.as = as;

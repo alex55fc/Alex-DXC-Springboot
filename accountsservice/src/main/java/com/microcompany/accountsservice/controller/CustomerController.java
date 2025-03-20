@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/customers")
 public class CustomerController {
 
-    private ICustomerService cs;
+    private final ICustomerService cs;
 
     public CustomerController(ICustomerService cs) {
         this.cs = cs;
