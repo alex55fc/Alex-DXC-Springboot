@@ -5,7 +5,7 @@ import com.microcompany.accountsservice.model.Account;
 import java.util.List;
 
 public interface IAccountService {
-    Account create(Account account);
+    Account create(Account account, Long ownerId);
 
     Account getAccount(Long id, Long ownerId);
 
