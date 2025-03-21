@@ -4,23 +4,27 @@ package com.microcompany.accountsservice.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Entity
 @Table(name = "account")
 public class Account {
 
-    //TODO, agregar validaciones
-
+    //@NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Type´s obligatory")
     private String type;
 
     @DateTimeFormat
+    @NotEmpty
     Date openingDate;
 
+    @NotEmpty
     private int balance;
 
     //@Column(name = "owner_id_value")
@@ -28,6 +32,7 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @NotEmpty
     Customer owner;
 
     public Account() {
