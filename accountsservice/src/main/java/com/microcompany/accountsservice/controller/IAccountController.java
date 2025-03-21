@@ -21,10 +21,11 @@ import javax.validation.constraints.Min;
 @Tag(name = "Accounts", description = "Gestión de cuentas")
 public interface IAccountController {
 
-    @Operation(summary = "Lista de cuentas de usuario", description = "Método para solicitar la lista de cuentas, asociadas a un usuario.")
+    @Operation(summary = "Devuelve la cuenta de un usuario", description = "Método para solicitar la cuenta de un usuario.")
     @RequestMapping(value = "/account/{id}/owner/{owner_id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAnAccount(@Min(1) @PathVariable("id") Long pid, @Min(1) @PathVariable("owner_id") Long cid);
 
+    @Operation(summary = "Lista de cuentas de usuario", description = "Método para solicitar la lista de cuentas, asociadas a un usuario.")
     @RequestMapping(value = "/accounts/owner/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAccountsByOwnerId(@Min(1) @PathVariable("id") Long pid);
 
@@ -46,8 +47,9 @@ public interface IAccountController {
     @DeleteMapping(value = "/accounts/owner/{owner_id}",  consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccountsByOwnerId(@Min(1) @PathVariable("owner_id") Long pid);
 
+    @Operation(summary = "Solicita un prestamo", description = "Método para comprobar si el usuario puede")
     @RequestMapping(value = "/account/owner/{owner_id}/loan/{amount}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") Float amount);
+    ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") int amount);
 
 
 

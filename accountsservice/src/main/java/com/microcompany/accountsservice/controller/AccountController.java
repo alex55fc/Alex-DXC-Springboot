@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.controller;
 
+import com.microcompany.accountsservice.exception.GlobalException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.services.IAccountService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,11 +32,9 @@ public class AccountController implements IAccountController{
 
     @Override
     public ResponseEntity getAnAccount(Long pid, Long cid) {
-
-        return null;
+        Account userAccount = as.getAccount(pid, cid);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(userAccount);
     }
-
-
 
     @Override
     public ResponseEntity createAccount(Account account, Long ownerId) {
@@ -68,8 +67,13 @@ public class AccountController implements IAccountController{
     }
 
     @Override
-    public ResponseEntity updateWithdrawAccount(Long id, Float amount) {
-        return null;
+    public ResponseEntity updateWithdrawAccount(Long id, int amount) {
+        try{
+            as.withdrawBalance(id, amount);
+            return ResponseEntity.status(HttpStatus.OK.value()).body("Prestamo aceptado.");
+        } catch(GlobalException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Préstamo denegado:" + e.getMessage());
+        }
     }
 }
 
