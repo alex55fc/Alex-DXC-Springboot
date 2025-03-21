@@ -15,6 +15,8 @@ import lombok.Setter;
 @Table(name = "account")
 public class Account {
 
+    //TODO, agregar validaciones
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

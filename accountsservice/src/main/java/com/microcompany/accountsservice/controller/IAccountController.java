@@ -29,29 +29,32 @@ public interface IAccountController {
     @RequestMapping(value = "/accounts/owner/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAccountsByOwnerId(@Min(1) @PathVariable("id") Long pid);
 
+    @Operation(summary = "Crear una cuenta de usuario", description = "Método para crear la cuenta del usuario.")
     @PostMapping(value = "/account/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity createAccount(@Valid @RequestBody Account account, @Min(1) @PathVariable("owner_id") Long ownerId);
 
+    @Operation(summary = "Actualizar una cuenta de usuario", description = "Método para actualizar la cuenta del usuario.")
     @PutMapping(value = "/account/{id}/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity updateAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account, @Min(1) @PathVariable("owner_id") Long ownerId);
 
+    @Operation(summary = "Borrar una cuenta de usuario", description = "Método para borrar la cuenta del usuario.")
     @DeleteMapping(value = "/account/{id}/owner/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccount(@Min(1) @PathVariable("id") Long id,  @Min(1) @PathVariable("owner_id") Long cid);
 
-    @PutMapping(value = "/account/{id}/deposit", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity updateDepositAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account);
+    @Operation(summary = "Depositar en una cuenta de usuario", description = "Método para borrar la cuenta del usuario.")
+    @PutMapping(value = "/account/{id}/deposit/{amount}/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity updateDepositAccount(@Min(1) @PathVariable("id") Long id, @Min(1) @PathVariable("amount") int amount, @Min(1) @PathVariable("owner_id") Long ownerId);
 
-    @PutMapping(value = "/account/{id}/withdraw", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account);
+    @Operation(summary = "Retirar en una cuenta de usuario", description = "Método para borrar la cuenta del usuario.")
+    @PutMapping(value = "/account/{id}/withdraw/{amount}/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("id") Long id, @Min(1) @PathVariable("amount") int amount, @Min(1) @PathVariable("owner_id") Long ownerId);
 
+    @Operation(summary = "Borrar las cuentas de usuario", description = "Método para borrar las cuentas del usuario.")
     @DeleteMapping(value = "/accounts/owner/{owner_id}",  consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccountsByOwnerId(@Min(1) @PathVariable("owner_id") Long pid);
 
     @Operation(summary = "Solicita un prestamo", description = "Método para comprobar si el usuario puede")
     @RequestMapping(value = "/account/owner/{owner_id}/loan/{amount}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") int amount);
-
-
-
+    ResponseEntity requestLoan(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") int amount);
 }
 

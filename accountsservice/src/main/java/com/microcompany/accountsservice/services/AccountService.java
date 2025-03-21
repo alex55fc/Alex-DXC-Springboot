@@ -70,7 +70,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Account withdrawBalance(Long id, int amount) {
+    public Account requestLoan(Long id, int amount) {
         Customer customer = customerService.getCustomerById(id);
         int monto = 0;
         for (Account account : customer.getAccount()) {
@@ -92,8 +92,17 @@ public class AccountService implements IAccountService {
     @Override
     public Account addBalance(Long id, int amount, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        Customer owner = null;// Will be gotten from user service
+        if(ownerId != newAccount.getOwner().getId()) new CustomerNotAllowedException();
         int newBalance = newAccount.getBalance() + amount;
+        newAccount.setBalance(newBalance);
+        return accountRepository.save(newAccount);
+    }
+
+    @Override
+    public Account withdrawBalance(Long id, int amount, Long ownerId) {
+        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        if(ownerId != newAccount.getOwner().getId()) new CustomerNotAllowedException();
+        int newBalance = newAccount.getBalance() - amount;
         newAccount.setBalance(newBalance);
         return accountRepository.save(newAccount);
     }

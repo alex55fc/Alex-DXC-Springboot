@@ -1,5 +1,7 @@
 package com.microcompany.accountsservice.controller;
 
+import com.microcompany.accountsservice.exception.AccountNotfoundException;
+import com.microcompany.accountsservice.exception.CustomerNotAllowedException;
 import com.microcompany.accountsservice.exception.GlobalException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.services.IAccountService;
@@ -36,40 +38,58 @@ public class AccountController implements IAccountController{
         return ResponseEntity.status(HttpStatus.OK.value()).body(userAccount);
     }
 
-    @Override
+     @Override
     public ResponseEntity createAccount(Account account, Long ownerId) {
-        return null;
+        Account newAccount = as.create(account , ownerId);
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(newAccount);
     }
 
     @Override
     public ResponseEntity updateAccount(Long id, Account account, Long ownerID) {
-        return null;
+        try{
+            Account accountUpdated = as.updateAccount(id, account, ownerID);
+            return ResponseEntity.status(HttpStatus.OK.value()).body(accountUpdated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar la cuenta.");
+        }
     }
 
     @Override
     public ResponseEntity deleteAccount(Long id, Long cid) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity updateDepositAccount(Long id, Account account) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity updateWithdrawAccount(Long id, Account account) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity deleteAccountsByOwnerId(Long pid) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity updateWithdrawAccount(Long id, int amount) {
         try{
-            as.withdrawBalance(id, amount);
+            as.deleteUserAccount(id, cid);
+            return ResponseEntity.status(HttpStatus.OK.value()).body("Eliminada la cuenta del usuario");
+        }catch (AccountNotfoundException acountNF){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo eliminar la cuenta" + acountNF.getMessage());
+        }catch (CustomerNotAllowedException customerNA){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer denegado" + customerNA.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity updateDepositAccount(Long id, int amount, Long ownerId) {
+        Account account = as.addBalance(id, amount, ownerId);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(account);
+    }
+
+    @Override
+    public ResponseEntity updateWithdrawAccount(Long id, int amount, Long ownerId) {
+        Account account = as.withdrawBalance(id, amount, ownerId);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(account);
+    }
+     @Override
+    public ResponseEntity deleteAccountsByOwnerId(Long ownerId) {
+        if (ownerId != null && ownerId > 0) {
+            as.deleteAccountsUsingOwnerId(ownerId);
+            return ResponseEntity.status(HttpStatus.OK.value()).body("Cuentas eliminadas correctamente");
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body("No se ha podido realizar");
+    }
+
+    @Override
+    public ResponseEntity requestLoan(Long id, int amount) {
+        try{
+            as.requestLoan(id, amount);
             return ResponseEntity.status(HttpStatus.OK.value()).body("Prestamo aceptado.");
         } catch(GlobalException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Préstamo denegado:" + e.getMessage());
