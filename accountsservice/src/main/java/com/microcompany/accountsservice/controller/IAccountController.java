@@ -23,8 +23,8 @@ public interface IAccountController {
     @RequestMapping(value = "/accounts/owner/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAccountsByOwnerId(@Min(1) @PathVariable("id") Long pid);
 
-    @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity createAccount(@Valid @RequestBody Account account);
+    @PostMapping(value = "/account/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity createAccount(@Valid @RequestBody Account account, @Min(1) @PathVariable("owner_id") Long ownerId);
 
     @PutMapping(value = "/account/{id}/customer/{owner_id}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity updateAccount(@Min(1) @PathVariable("id") Long id, @Valid @RequestBody Account account, @Min(1) @PathVariable("owner_id") Long ownerId);
