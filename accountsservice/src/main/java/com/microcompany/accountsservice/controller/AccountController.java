@@ -2,12 +2,16 @@ package com.microcompany.accountsservice.controller;
 
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.services.IAccountService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
@@ -20,15 +24,18 @@ public class AccountController implements IAccountController{
     }
 
     @Override
+    public ResponseEntity getAccountsByOwnerId(Long pid) {
+        List<Account> cuentas = as.getAccountByOwnerId(pid);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(cuentas);
+    }
+
+    @Override
     public ResponseEntity getAnAccount(Long pid, Long cid) {
 
         return null;
     }
 
-    @Override
-    public ResponseEntity getAccountsByOwnerId(Long pid) {
-        return null;
-    }
+
 
     @Override
     public ResponseEntity createAccount(Account account, Long ownerId) {

@@ -1,6 +1,8 @@
 package com.microcompany.accountsservice.controller;
 
 import com.microcompany.accountsservice.model.Account;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +18,10 @@ import javax.validation.constraints.Min;
 @RestController
 @RequestMapping("/default")
 @Validated
+@Tag(name = "Accounts", description = "Gestión de cuentas")
 public interface IAccountController {
+
+    @Operation(summary = "Lista de cuentas de usuario", description = "Método para solicitar la lista de cuentas, asociadas a un usuario.")
     @RequestMapping(value = "/account/{id}/owner/{owner_id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAnAccount(@Min(1) @PathVariable("id") Long pid, @Min(1) @PathVariable("owner_id") Long cid);
 
