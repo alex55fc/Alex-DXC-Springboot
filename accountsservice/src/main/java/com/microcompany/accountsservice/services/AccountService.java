@@ -47,7 +47,8 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Account create(Account account) {
+    public Account create(Account account, Long ownerId) {
+        if(ownerId  != account.getOwner().getId()) new CustomerNotAllowedException();
         Date current_Date = new Date();
         account.setOpeningDate(current_Date);
         return accountRepository.save(account);
