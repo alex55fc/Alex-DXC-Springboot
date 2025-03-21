@@ -7,11 +7,11 @@ INSERT INTO CUSTOMER (id, name, email) VALUES
 (5, 'Luis Rodríguez', 'luis.rodriguez@example.com');
 
 -- Insertar datos en la tabla account
-INSERT INTO ACCOUNT(type, opening_date, balance, owner_id_value, owner_id) VALUES
-('Ahorro', '2023-01-15', 1, 1500, 1),
-('Corriente', '2023-03-22', 1, 2500, 1),
-('Ahorro', '2024-06-10', 3, 3000, 2),
-('Corriente', '2022-11-30', 2, 500, 3),
-('Ahorro', '2025-01-05', 4, 1200, 4),
-('Corriente', '2023-09-18', 3, 800, 5),
-('Ahorro', '2024-02-14', 5, 2000, 5);
+INSERT INTO ACCOUNT(type, opening_date,balance, owner_id) VALUES
+('Ahorro', '2023-01-15', 1500, 1),
+('Corriente', '2023-03-22', 2500, 1),
+('Ahorro', '2024-06-10', 3000, 2),
+('Corriente', '2022-11-30', 500, 3),
+('Ahorro', '2025-01-05', 1200, 4),
+('Corriente', '2023-09-18', 800, 5),
+('Ahorro', '2024-02-14', 2000, 5);
