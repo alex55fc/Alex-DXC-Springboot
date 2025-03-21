@@ -17,9 +17,9 @@ public interface IAccountService {
 
     Account addBalance(Long id, int amount, Long ownerId);
 
-    Account withdrawBalance(Long id, int amount, Long ownerId);
+    Account withdrawBalance(Long id, int amount);
 
-    void delete(Long id, Long ownerId);
+    void deleteUserAccount(Long id, Long ownerId);
 
     void deleteAccountsUsingOwnerId(Long ownerId);
 

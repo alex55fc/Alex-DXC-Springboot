@@ -20,12 +20,16 @@ public class AccountService implements IAccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private CustomerService customerService;
+
     @Override
     public Account getAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
         if(account.getOwner().getId() != ownerId) new GlobalException();
         return account;
     }
+
     @Override
     public List<Account> getAccounts(Long id) {
         List<Account> listaUsuario = accountRepository.findByOwnerId(id);
@@ -48,13 +52,30 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public void delete(Long id, Long ownerId) {
+    public void deleteUserAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
         if(ownerId != account.getOwner().getId()) new GlobalException();
         this.accountRepository.delete(account);
     }
 
+    @Override
+    public void deleteAccountsUsingOwnerId(Long ownerId) {
+        List<Account> accounts = accountRepository.findByOwnerId(ownerId);
+        for (Account account : accounts) {
+            this.accountRepository.delete(account);
+        }
+    }
 
+    @Override
+    public Account withdrawBalance(Long id, int amount) {
+        Customer customer = customerService.getCustomerById(id);
+        int monto = 0;
+        for (Account account : customer.getAccount()) {
+            monto += account.getBalance();
+        }
+        if(monto * 0.8 < amount) throw new GlobalException();
+        return null;
+    }
 
 
 
@@ -74,24 +95,11 @@ public class AccountService implements IAccountService {
         return accountRepository.save(newAccount);
     }
 
-    @Override
-    public Account withdrawBalance(Long id, int amount, Long ownerId) {
-        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        Customer owner = null; // Will be gotten from user service
-        int newBalance = newAccount.getBalance() - amount;
-        newAccount.setBalance(newBalance);
-        return accountRepository.save(newAccount);
-    }
 
 
 
-    @Override
-    public void deleteAccountsUsingOwnerId(Long ownerId) {
-        List<Account> accounts = accountRepository.findByOwnerId(ownerId);
-        for (Account account : accounts) {
-            this.accountRepository.delete(account);
-        }
-    }
+
+
 
 
 }
