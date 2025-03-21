@@ -1,6 +1,8 @@
 package com.microcompany.accountsservice.services;
 
 import com.microcompany.accountsservice.exception.AccountNotfoundException;
+import com.microcompany.accountsservice.exception.CustomerNotAllowedException;
+import com.microcompany.accountsservice.exception.CustomerNotOwnerException;
 import com.microcompany.accountsservice.exception.GlobalException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
@@ -26,7 +28,7 @@ public class AccountService implements IAccountService {
     @Override
     public Account getAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(account.getOwner().getId() != ownerId) new GlobalException();
+        if(account.getOwner().getId() != ownerId) new CustomerNotOwnerException();
         return account;
     }
 
@@ -39,7 +41,7 @@ public class AccountService implements IAccountService {
     @Override
     public Account updateAccount(Long id, Account account, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId  != newAccount.getOwner().getId()) new GlobalException();
+        if(ownerId  != newAccount.getOwner().getId()) new CustomerNotAllowedException();
         newAccount.setType(account.getType());
         return accountRepository.save(newAccount);
     }
@@ -54,7 +56,7 @@ public class AccountService implements IAccountService {
     @Override
     public void deleteUserAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId != account.getOwner().getId()) new GlobalException();
+        if(ownerId != account.getOwner().getId()) new CustomerNotAllowedException();
         this.accountRepository.delete(account);
     }
 
