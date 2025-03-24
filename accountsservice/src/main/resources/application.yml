@@ -45,19 +45,37 @@ logging:
 
 
 ---
+
 spring:
-  config.activate.on-profile: prod
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: "jdbc:mysql://localhost:3306/accounts_db"
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+  sql:
+    init:
+      mode: never  # No cargar datos iniciales en prod
+  server:
+    servlet.contextPath: /api/v1
+    port: 9943
+  logging:
+    level:
+      root: ERROR
 
-server:
-  servlet.contextPath: /api/v1
-  port: 9943
-
-logging:
-  level:
-    root: ERROR
-
+---
 springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+    default-produces-media-type: application/json
+    default-consumes-media-type: application/json

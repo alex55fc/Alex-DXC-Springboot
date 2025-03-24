@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.controller;
 
+import com.microcompany.accountsservice.dto.AccountDTO;
 import com.microcompany.accountsservice.exception.AccountNotfoundException;
 import com.microcompany.accountsservice.exception.CustomerNotAllowedException;
 import com.microcompany.accountsservice.exception.GlobalException;
@@ -35,7 +36,9 @@ public class AccountController implements IAccountController{
     @Override
     public ResponseEntity getAnAccount(Long pid, Long cid) {
         Account userAccount = as.getAccount(pid, cid);
-        return ResponseEntity.status(HttpStatus.OK.value()).body(userAccount);
+
+        AccountDTO userAccountDTO = new AccountDTO(userAccount.getId(),userAccount.getType(), userAccount.getBalance(), userAccount.getOpeningDate(), userAccount.getOwner().getId()) ;
+        return ResponseEntity.status(HttpStatus.OK.value()).body(userAccountDTO);
     }
 
      @Override
