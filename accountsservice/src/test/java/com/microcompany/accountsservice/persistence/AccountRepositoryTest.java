@@ -47,7 +47,54 @@ class AccountRepositoryTest {
         assertThat(accounts.size()).isGreaterThan(0);
     }
 
+    @Test
+    void save(){
+        Account account = new Account(null, "Ahorro", new Date("2024-02-16"), 1500, 2L);
 
+        accountRepository.save(account);
+
+        assertThat(account.getId()).isGreaterThan(0);
+        Account emAccount = entityManager.find(Account.class, account.getId());
+        assertThat(emAccount.getOpeningDate().compareTo(account.getOpeningDate()));
+
+    }
+
+        @Test
+    void findByType() {
+    // given
+    Account account1 = new Account(null, "Ahorro", new Date("2023-01-15"), 1500, 1L);
+    Account account2 = new Account(null, "Corriente", new Date("2023-01-16"), 2000, 2L);
+    entityManager.persist(account1);
+    entityManager.persist(account2);
+    entityManager.flush();
+
+    // when
+    List<Account> accounts = accountRepository.findByType("Ahorro");
+    logger.info("Accounts: " + accounts);
+
+    // then
+    assertNotNull(accounts);
+    assertFalse(accounts.isEmpty());
+    assertEquals(1, accounts.size());
+    assertEquals("Ahorro", accounts.get(0).getType());
+    }
+
+    @Test
+    void deleteById() {
+      // given
+      Account account = new Account(null, "Ahorro", new Date("2024-02-16"), 1500, 2L);
+      entityManager.persist(account);
+      entityManager.flush();
+
+      // when
+      accountRepository.deleteById(account.getId());
+      entityManager.flush();
+
+      // then
+      Account deletedAccount = entityManager.find(Account.class, account.getId());
+      assertNull(deletedAccount, "Account should be null after deletion");
+
+    }
 
 
 
