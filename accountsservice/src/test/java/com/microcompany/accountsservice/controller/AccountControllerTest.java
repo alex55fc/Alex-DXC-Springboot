@@ -1,9 +1,12 @@
 package com.microcompany.accountsservice.controller;
 
+import com.microcompany.accountsservice.model.Account;
+import com.microcompany.accountsservice.services.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -11,9 +14,11 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.net.ServerSocket;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +32,20 @@ public class AccountControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private AccountService accountService;
+
+    @Test
+    void getAccount_shouldReturnAnAccount() throws Exception {
+        Account account = new Account(1L, "Ahorro", new Date("2024-02-16"), 1500, 2L);
+        when(accountService.getAccount(1L, 2L)).thenReturn(account);
+
+        mvc.perform(get("/account/1"))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.type").value("Ahorro"))
+                .andExpect((ResultMatcher) jsonPath("$.balance").value("1500"));
+    }
+
     @Test
     public void givenAccounts_whenProducts_thenStatus200() throws Exception {
         mvc.perform(get("/accounts").accept(MediaType.APPLICATION_JSON))
@@ -36,7 +55,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void givenProducts_whenGetProductsBadSearch_thenStatus404() throws Exception {
+    public void givenAccounts_whenGetProductsBadSearch_thenStatus404() throws Exception {
         mvc.perform(get("/accounts?nombrewith=a").accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound())

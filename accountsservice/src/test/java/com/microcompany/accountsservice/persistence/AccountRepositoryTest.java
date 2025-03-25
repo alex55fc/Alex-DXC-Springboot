@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -96,6 +97,19 @@ class AccountRepositoryTest {
 
     }
 
+    @Test
+    void findById_NotFound() {
+        // given
+        Long nonExistentId = 999L;
+
+        // when
+        List<Account> accounts = accountRepository.findAllById(Collections.singletonList(nonExistentId));
+        logger.info("Accounts: " + accounts);
+
+        // then
+        assertNotNull(accounts);
+        assertTrue(accounts.isEmpty());
+    }
 
 
 }
