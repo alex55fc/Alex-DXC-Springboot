@@ -46,6 +46,14 @@ public class Account {
         this.owner = owner;
     }
 
+    public Account(Long id, String type, Date openingDate, int balance, long owner) {
+        this.id = id;
+        this.type = type;
+        this.openingDate = openingDate;
+        this.balance = balance;
+        this.owner.setId(owner);
+    }
+
     public Long getId() {
         return id;
     }
