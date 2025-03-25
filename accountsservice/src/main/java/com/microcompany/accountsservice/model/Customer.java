@@ -25,7 +25,9 @@ public class Customer {
 
     public Customer() {
     }
-
+    public Customer(Long id) {
+        this.id = id;
+    }
     public Customer(Long id, String name, String email, List<Account> account) {
         this.id = id;
         this.name = name;

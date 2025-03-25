@@ -35,7 +35,7 @@ public class AccountService implements IAccountService {
     @Override
     public List<Account> getAccounts(Long id) {
         List<Account> listaUsuario = accountRepository.findByOwnerId(id);
-        if(listaUsuario.isEmpty()) new GlobalException();
+        if(listaUsuario.isEmpty()) throw new GlobalException();
         return listaUsuario;
     }
     @Override

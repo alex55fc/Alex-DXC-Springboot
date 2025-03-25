@@ -51,7 +51,7 @@ public class Account {
         this.type = type;
         this.openingDate = openingDate;
         this.balance = balance;
-        this.owner.setId(owner);
+        this.owner = new Customer(owner);
     }
 
     public Long getId() {
