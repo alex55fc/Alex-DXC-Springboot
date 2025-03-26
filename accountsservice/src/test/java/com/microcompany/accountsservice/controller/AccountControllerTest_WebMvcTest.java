@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -48,12 +49,15 @@ public class AccountControllerTest_WebMvcTest {
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() throws Exception{
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
 
         List<Account> accountsFake = List.of(
-                new Account(1L, "Ahorro", new Date("2024-02-16"), 1500, 2L),
-                new Account(2L, "Ahorro", new Date("2024-02-16"), 1500, 2L),
-                new Account(3L, "Ahorro", new Date("2024-02-16"), 1500, 2L)
+                new Account(1L, "Ahorro", openingDate, 1500, 2L),
+                new Account(2L, "Ahorro", openingDate, 1500, 2L),
+                new Account(3L, "Ahorro", openingDate, 1500, 2L)
         );
 
         Mockito.when(accServiceMock.getAccounts(1L)).thenReturn(accountsFake);
@@ -69,7 +73,7 @@ public class AccountControllerTest_WebMvcTest {
 
     @Test
     public void givenProducts_whenGetAccountsBadSearch_theStatus404() throws Exception {
-        mvc.perform(get("/accounts").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/account").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect((ResultMatcher) content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect((ResultMatcher) jsonPath("$[0].type", is("Fake acc 1")));
@@ -77,9 +81,12 @@ public class AccountControllerTest_WebMvcTest {
 
     @Test
     void givenProducts_whenValidCreateProduct_thenIsCreatedAndHaveId() throws Exception {
-        Account newAcc = new Account(1L, "Ahorro", new Date("2024-02-16"), 1500, 2L);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
+        
+        Account newAcc = new Account(1L, "Ahorro", openingDate, 1500, 2L);
 
-        mvc.perform(post("/accounts")
+        mvc.perform(post("/account")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.asJsonString(newAcc))

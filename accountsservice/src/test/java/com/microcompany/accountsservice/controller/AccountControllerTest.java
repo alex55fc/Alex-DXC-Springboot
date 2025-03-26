@@ -10,19 +10,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.net.ServerSocket;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.hamcrest.Matchers.*;
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.not;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -36,30 +32,56 @@ public class AccountControllerTest {
     private AccountService accountService;
 
     @Test
-    void getAccount_shouldReturnAnAccount() throws Exception {
-        Account account = new Account(1L, "Ahorro", new Date("2024-02-16"), 1500, 2L);
-        when(accountService.getAccount(1L, 2L)).thenReturn(account);
-
-        mvc.perform(get("/account/1"))
-                .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.type").value("Ahorro"))
-                .andExpect((ResultMatcher) jsonPath("$.balance").value("1500"));
+    void givenAccounts_whenProducts_thenStatus200() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
+        
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+        when(accountService.getAccount(1L, 1L)).thenReturn(account);
+        
+        mvc.perform(get("/api/v1/account/1/customer/1")
+                .accept(MediaType.APPLICATION_JSON))                
+            .andExpect(status().isOk());            
     }
 
     @Test
-    public void givenAccounts_whenProducts_thenStatus200() throws Exception {
-        mvc.perform(get("/accounts").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect((ResultMatcher) content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$[0]name", is("Account Test 1")));
+    void givenAccounts_whenGetProductsBadSearch_thenStatus404() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
+        
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+        when(accountService.getAccount(1L, 1L)).thenReturn(account);
+        
+        mvc.perform(get("/api/v2/account/1/customer/1")
+                .accept(MediaType.APPLICATION_JSON))                
+            .andExpect(status().isNotFound());            
     }
 
     @Test
-    public void givenAccounts_whenGetProductsBadSearch_thenStatus404() throws Exception {
-        mvc.perform(get("/accounts?nombrewith=a").accept(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound())
-                .andExpect((ResultMatcher) content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$.status", is(404)));
+    void getAccount_should_ReturnAnAccountWithBalance1500() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
+        
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+        when(accountService.getAccount(1L, 1L)).thenReturn(account);
+        
+        mvc.perform(get("/api/v1/account/1/customer/1")
+                .accept(MediaType.APPLICATION_JSON))                
+            .andExpect(status().isOk())                
+            .andExpect(jsonPath("$.balance").value(1500));
+    }
+
+    @Test
+    void getAccount_shouldNot_ReturnAnAccountWithBalance1500() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date openingDate = sdf.parse("2024-02-16");
+        
+        Account account = new Account(1L, "Ahorro", openingDate, 1600, 1L);
+        when(accountService.getAccount(1L, 1L)).thenReturn(account);
+        
+        mvc.perform(get("/api/v1/account/1/customer/1")
+                .accept(MediaType.APPLICATION_JSON))                
+            .andExpect(status().isOk())                
+            .andExpect(jsonPath("$.balance").value(not(1500)));
     }
 }

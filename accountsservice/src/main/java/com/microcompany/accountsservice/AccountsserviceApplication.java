@@ -12,5 +12,5 @@ public class AccountsserviceApplication {
 		SpringApplication.run(AccountsserviceApplication.class, args);
 		System.out.print("Account Service Application");
 	}
-
+	
 }

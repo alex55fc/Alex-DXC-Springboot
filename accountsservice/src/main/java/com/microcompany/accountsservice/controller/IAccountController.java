@@ -22,11 +22,11 @@ import javax.validation.constraints.Min;
 public interface IAccountController {
 
     @Operation(summary = "Devuelve la cuenta de un usuario", description = "Método para solicitar la cuenta de un usuario.")
-    @RequestMapping(value = "/account/{id}/customer/{owner_id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/account/{id}/customer/{owner_id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAnAccount(@Min(1) @PathVariable("id") Long pid, @Min(1) @PathVariable("owner_id") Long cid);
 
     @Operation(summary = "Lista de cuentas de usuario", description = "Método para solicitar la lista de cuentas, asociadas a un usuario.")
-    @RequestMapping(value = "/accounts/customer/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/accounts/customer/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity getAccountsByOwnerId(@Min(1) @PathVariable("id") Long pid);
 
     @Operation(summary = "Crear una cuenta de usuario", description = "Método para crear la cuenta del usuario.")
@@ -54,7 +54,7 @@ public interface IAccountController {
     ResponseEntity deleteAccountsByOwnerId(@Min(1) @PathVariable("owner_id") Long pid);
 
     @Operation(summary = "Solicita un prestamo", description = "Método para comprobar si el usuario puede")
-    @RequestMapping(value = "/account/customer/{owner_id}/loan/{amount}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/account/customer/{owner_id}/loan/{amount}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity requestLoan(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") int amount);
 }
 
