@@ -45,6 +45,14 @@ public class AccountServiceTest {
         );
         Mockito.when(arMock.findByOwnerId(1L)).thenReturn(accountsFake);
         Mockito.when(arMock.findByOwnerId(222L)).thenReturn(null);
+
+        Mockito.when(arMock.save(Mockito.any(Account.class)))
+                .thenAnswer(elem ->{
+                    Account ac = (Account) elem.getArguments()[0];
+                    ac.setId(111L);
+                    return ac;
+                });
+
     }
     @Test
     void givenAccountsWhenSearchByLongIdIsNotNull(){
@@ -54,10 +62,18 @@ public class AccountServiceTest {
     }
     @Test
     void givenAccountsWhenSearchByLongIdNotExistThenException(){
-        assertThatExceptionOfType(GlobalException.class).isThrownBy(()->{
-            List<Account> accounts = as.getAccounts(22L);
-
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(()->{
+            List<Account> accounts = as.getAccounts(222L);
         });
     }
+    @Test
+    void givenValidAccount_WhenCreate_ThenThenIsNotNull(){
+        Account newAccount = new Account(null,"Fake type",null, 0, 5);
+        as.create(newAccount, newAccount.getOwner().getId());
+        assertThat(newAccount.getId()).isGreaterThan(0L);
+        assertThat(newAccount.getId()).isEqualTo(111L);
+    }
 
-}
+    }
+
+

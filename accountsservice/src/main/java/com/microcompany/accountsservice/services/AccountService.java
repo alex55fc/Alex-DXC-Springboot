@@ -28,27 +28,27 @@ public class AccountService implements IAccountService {
     @Override
     public Account getAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(account.getOwner().getId() != ownerId) new CustomerNotOwnerException();
+        if(account.getOwner().getId() != ownerId) throw new CustomerNotOwnerException();
         return account;
     }
 
     @Override
     public List<Account> getAccounts(Long id) {
         List<Account> listaUsuario = accountRepository.findByOwnerId(id);
-        if(listaUsuario.isEmpty()) throw new GlobalException();
+        if(listaUsuario == null || listaUsuario.isEmpty()) throw new NullPointerException();
         return listaUsuario;
     }
     @Override
     public Account updateAccount(Long id, Account account, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId  != newAccount.getOwner().getId()) new CustomerNotAllowedException();
+        if(ownerId  != newAccount.getOwner().getId()) throw new CustomerNotAllowedException();
         newAccount.setType(account.getType());
         return accountRepository.save(newAccount);
     }
 
     @Override
     public Account create(Account account, Long ownerId) {
-        if(ownerId  != account.getOwner().getId()) new CustomerNotAllowedException();
+        if(ownerId  != account.getOwner().getId()) throw new CustomerNotAllowedException();
         Date current_Date = new Date();
         account.setOpeningDate(current_Date);
         return accountRepository.save(account);
@@ -57,7 +57,7 @@ public class AccountService implements IAccountService {
     @Override
     public void deleteUserAccount(Long id, Long ownerId) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId != account.getOwner().getId()) new CustomerNotAllowedException();
+        if(ownerId != account.getOwner().getId()) throw new CustomerNotAllowedException();
         this.accountRepository.delete(account);
     }
 
@@ -92,7 +92,7 @@ public class AccountService implements IAccountService {
     @Override
     public Account addBalance(Long id, int amount, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId != newAccount.getOwner().getId()) new CustomerNotAllowedException();
+        if(ownerId != newAccount.getOwner().getId()) throw new CustomerNotAllowedException();
         int newBalance = newAccount.getBalance() + amount;
         newAccount.setBalance(newBalance);
         return accountRepository.save(newAccount);
@@ -101,7 +101,7 @@ public class AccountService implements IAccountService {
     @Override
     public Account withdrawBalance(Long id, int amount, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        if(ownerId != newAccount.getOwner().getId()) new CustomerNotAllowedException();
+        if(ownerId != newAccount.getOwner().getId()) throw new CustomerNotAllowedException();
         int newBalance = newAccount.getBalance() - amount;
         newAccount.setBalance(newBalance);
         return accountRepository.save(newAccount);
