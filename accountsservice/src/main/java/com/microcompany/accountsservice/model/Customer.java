@@ -30,6 +30,7 @@ public class Customer implements UserDetails {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> account;
 
+    private String password;
     public Customer() {
     }
 
@@ -46,6 +47,13 @@ public class Customer implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     public ERole role;
+
+    public Customer(Long id, String email, String password, ERole eRole) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = eRole;
+    }
 
     public void setRole(ERole role) {
         this.role = role;
@@ -94,7 +102,7 @@ public class Customer implements UserDetails {
 
         if(this.role != null) authorities.add(new SimpleGrantedAuthority(this.role.name()));
 
-        return List.of();
+        return authorities;
     }
 
     @Override

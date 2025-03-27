@@ -1,6 +1,8 @@
+
 package com.microcompany.accountsservice.controller;
 
 import com.microcompany.accountsservice.model.Account;
+import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.services.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,53 +37,57 @@ public class AccountControllerTest {
     void givenAccounts_whenProducts_thenStatus200() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date openingDate = sdf.parse("2024-02-16");
-        
-        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+
+        Customer customer = new Customer(1L, "Test Customer", "test@example.com", null);
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, customer);
         when(accountService.getAccount(1L, 1L)).thenReturn(account);
-        
+
         mvc.perform(get("/api/v1/account/1/customer/1")
-                .accept(MediaType.APPLICATION_JSON))                
-            .andExpect(status().isOk());            
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
     void givenAccounts_whenGetProductsBadSearch_thenStatus404() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date openingDate = sdf.parse("2024-02-16");
-        
-        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+
+        Customer customer = new Customer(1L, "Test Customer", "test@example.com", null);
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, customer);
         when(accountService.getAccount(1L, 1L)).thenReturn(account);
-        
+
         mvc.perform(get("/api/v2/account/1/customer/1")
-                .accept(MediaType.APPLICATION_JSON))                
-            .andExpect(status().isNotFound());            
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void getAccount_should_ReturnAnAccountWithBalance1500() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date openingDate = sdf.parse("2024-02-16");
-        
-        Account account = new Account(1L, "Ahorro", openingDate, 1500, 1L);
+
+        Customer customer = new Customer(1L, "Test Customer", "test@example.com", null);
+        Account account = new Account(1L, "Ahorro", openingDate, 1500, customer);
         when(accountService.getAccount(1L, 1L)).thenReturn(account);
-        
+
         mvc.perform(get("/api/v1/account/1/customer/1")
-                .accept(MediaType.APPLICATION_JSON))                
-            .andExpect(status().isOk())                
-            .andExpect(jsonPath("$.balance").value(1500));
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(1500));
     }
 
     @Test
     void getAccount_shouldNot_ReturnAnAccountWithBalance1500() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date openingDate = sdf.parse("2024-02-16");
-        
-        Account account = new Account(1L, "Ahorro", openingDate, 1600, 1L);
+
+        Customer customer = new Customer(1L, "Test Customer", "test@example.com", null);
+        Account account = new Account(1L, "Ahorro", openingDate, 1600, customer);
         when(accountService.getAccount(1L, 1L)).thenReturn(account);
-        
+
         mvc.perform(get("/api/v1/account/1/customer/1")
-                .accept(MediaType.APPLICATION_JSON))                
-            .andExpect(status().isOk())                
-            .andExpect(jsonPath("$.balance").value(not(1500)));
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(not(1500)));
     }
 }
