@@ -1,23 +1,22 @@
 package com.microcompany.accountsservice.model;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-
 @Entity
-@Table(name ="customer")
+@Table(name = "customer")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name is obligatory")
     private String name;
+
+    @Email(message = "Email should be valid")
     private String email;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -25,9 +24,11 @@ public class Customer {
 
     public Customer() {
     }
+
     public Customer(Long id) {
         this.id = id;
     }
+
     public Customer(Long id, String name, String email, List<Account> account) {
         this.id = id;
         this.name = name;

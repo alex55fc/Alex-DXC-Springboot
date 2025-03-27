@@ -1,39 +1,35 @@
 package com.microcompany.accountsservice.model;
 
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
 @Table(name = "account")
 public class Account {
 
-    //@NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Type´s obligatory")
+    @NotBlank(message = "Type is obligatory")
     private String type;
 
     @DateTimeFormat
-    @NotEmpty
-    Date openingDate;
+    @NotNull(message = "Opening date is obligatory")
+    private Date openingDate;
 
-    @NotEmpty
+    @Min(value = 0, message = "Balance cannot be negative")
     private int balance;
-
-    //@Column(name = "owner_id_value")
-    //private Long ownerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    @NotEmpty
-    Customer owner;
+    @NotNull(message = "Owner is obligatory")
+    private Customer owner;
 
     public Account() {
     }
@@ -44,14 +40,6 @@ public class Account {
         this.openingDate = openingDate;
         this.balance = balance;
         this.owner = owner;
-    }
-
-    public Account(Long id, String type, Date openingDate, int balance, long owner) {
-        this.id = id;
-        this.type = type;
-        this.openingDate = openingDate;
-        this.balance = balance;
-        this.owner = new Customer(owner);
     }
 
     public Long getId() {
@@ -70,6 +58,14 @@ public class Account {
         this.type = type;
     }
 
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    public void setOpeningDate(Date openingDate) {
+        this.openingDate = openingDate;
+    }
+
     public int getBalance() {
         return balance;
     }
@@ -84,13 +80,5 @@ public class Account {
 
     public void setOwner(Customer owner) {
         this.owner = owner;
-    }
-
-    public Date getOpeningDate() {
-        return openingDate;
-    }
-
-    public void setOpeningDate(Date openingDate) {
-        this.openingDate = openingDate;
     }
 }

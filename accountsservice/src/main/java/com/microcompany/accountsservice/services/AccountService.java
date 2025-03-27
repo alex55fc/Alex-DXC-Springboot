@@ -34,10 +34,9 @@ public class AccountService implements IAccountService {
 
     @Override
     public List<Account> getAccounts(Long id) {
-        List<Account> listaUsuario = accountRepository.findByOwnerId(id);
-        if(listaUsuario == null || listaUsuario.isEmpty()) throw new NullPointerException();
-        return listaUsuario;
+        return accountRepository.findByOwnerId(id);        
     }
+    
     @Override
     public Account updateAccount(Long id, Account account, Long ownerId) {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
