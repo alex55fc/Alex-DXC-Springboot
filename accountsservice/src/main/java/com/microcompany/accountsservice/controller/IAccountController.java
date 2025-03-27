@@ -41,11 +41,11 @@ public interface IAccountController {
     @DeleteMapping(value = "/account/{id}/customer/{owner_id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccount(@Min(1) @PathVariable("id") Long id,  @Min(1) @PathVariable("owner_id") Long cid);
 
-    @Operation(summary = "Depositar en una cuenta de usuario", description = "Método para borrar la cuenta del usuario.")
+    @Operation(summary = "Depositar en una cuenta de usuario", description = "Método para depositar la cuenta del usuario.")
     @PutMapping(value = "/account/{id}/deposit/{amount}/customer/{owner_id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity updateDepositAccount(@Min(1) @PathVariable("id") Long id, @Min(1) @PathVariable("amount") int amount, @Min(1) @PathVariable("owner_id") Long ownerId);
 
-    @Operation(summary = "Retirar en una cuenta de usuario", description = "Método para borrar la cuenta del usuario.")
+    @Operation(summary = "Retirar en una cuenta de usuario", description = "Método para retirar dinero la cuenta del usuario.")
     @PutMapping(value = "/account/{id}/withdraw/{amount}/customer/{owner_id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity updateWithdrawAccount(@Min(1) @PathVariable("id") Long id, @Min(1) @PathVariable("amount") int amount, @Min(1) @PathVariable("owner_id") Long ownerId);
 
@@ -53,7 +53,7 @@ public interface IAccountController {
     @DeleteMapping(value = "/accounts/customer/{owner_id}",  produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity deleteAccountsByOwnerId(@Min(1) @PathVariable("owner_id") Long pid);
 
-    @Operation(summary = "Solicita un prestamo", description = "Método para comprobar si el usuario puede")
+    @Operation(summary = "Solicita un prestamo", description = "Método para comprobar si el usuario puede pedir un prestamo")
     @RequestMapping(value = "/account/customer/{owner_id}/loan/{amount}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity requestLoan(@Min(1) @PathVariable("owner_id") Long id, @Min(1) @PathVariable("amount") int amount);
 }
