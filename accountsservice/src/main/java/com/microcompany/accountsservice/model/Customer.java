@@ -1,13 +1,21 @@
 package com.microcompany.accountsservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import javax.transaction.TransactionScoped;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class Customer implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +42,17 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.account = account;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public ERole role;
+
+    public void setRole(ERole role) {
+        this.role = role;
+    }
+
+    public ERole getRole() {
+        return this.role;
     }
 
     public Long getId() {
@@ -66,5 +85,53 @@ public class Customer {
 
     public void setAccount(List<Account> account) {
         this.account = account;
+    }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if(this.role != null) authorities.add(new SimpleGrantedAuthority(this.role.name()));
+
+        return List.of();
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return false;
     }
 }

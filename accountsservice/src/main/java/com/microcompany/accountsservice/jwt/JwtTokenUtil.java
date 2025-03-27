@@ -1,5 +1,7 @@
 package com.microcompany.accountsservice.jwt;
 
+import com.microcompany.accountsservice.model.Customer;
+import com.microcompany.accountsservice.model.ERole;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,7 @@ private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hour
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(Customer user) {
         Claims claims = Jwts.claims().setSubject(String.format("%s,%s", user.getId(), user.getEmail()));
         claims.put("role", user.getRole());
 
