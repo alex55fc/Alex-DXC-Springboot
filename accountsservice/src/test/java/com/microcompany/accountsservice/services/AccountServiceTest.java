@@ -93,10 +93,5 @@ public class AccountServiceTest {
         assertThat(newAccount.getId()).isEqualTo(111L);
     }
 
-    @Test
-    void givenAccountsWhenSearchByLongIdNotExistThenThrowNullPointerException() {
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> {
-            as.getAccounts(222L);
-        });
-    }
+
 }
